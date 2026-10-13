@@ -275,7 +275,7 @@ Unknown model strings fall back to Mock gracefully — the server never crashes 
 | Value | Quality | Needs |
 |---|---|---|
 | `hash` | Exact + synonym repeats (all languages); no downloads | Nothing — use for CI/dev |
-| `bge-m3` (default) | Multilingual semantic similarity, strong coverage across 100+ languages | `pip install sentence-transformers` (auto-downloads `BAAI/bge-m3`) |
+| `bge-m3` (default with extra) | Multilingual semantic similarity, strong coverage across 100+ languages | `pip install -e ".[embeddings]" (auto-downloads `BAAI/bge-m3`) |
 | `qwen3` | `Qwen/Qwen3-Embedding-0.6B` semantics | Same package |
 | `ollama` | `OLLAMA_EMBED_MODEL` (e.g. `nomic-embed-text`) | Ollama running |
 

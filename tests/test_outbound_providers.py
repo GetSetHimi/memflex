@@ -69,6 +69,8 @@ def test_factory_routes_all_five_vendors(monkeypatch):
     monkeypatch.setattr("reflex.core.config.settings.anthropic_api_key", "", raising=False)
     monkeypatch.setattr("reflex.core.config.settings.gemini_api_key", "", raising=False)
     monkeypatch.setattr("reflex.core.config.settings.openai_api_key", "", raising=False)
+    monkeypatch.setattr("reflex.core.config.settings.openrouter_api_key", "", raising=False)
+    monkeypatch.setattr("reflex.core.config.settings.deepseek_api_key", "", raising=False)
     for m in ["claude/claude-sonnet-4-5", "anthropic/x", "gemini/gemini-2.5-flash",
               "google/y", "openai/gpt-4o-mini", "gpt-4o", "openrouter/a", "deepseek/b"]:
         assert isinstance(get_provider(m), MockProvider), m

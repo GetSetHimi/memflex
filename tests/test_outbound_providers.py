@@ -60,11 +60,15 @@ def test_gemini_request_shape(monkeypatch):
 
 
 def test_factory_routes_all_five_vendors(monkeypatch):
-    # no keys in CI → graceful Mock fallback (never crashes keyless)
+    # no keys in CI → graceful Mock fallback (never crashes keyless).
+    # Blank settings too: a local .env with real keys must not leak in.
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr("reflex.core.config.settings.anthropic_api_key", "", raising=False)
+    monkeypatch.setattr("reflex.core.config.settings.gemini_api_key", "", raising=False)
+    monkeypatch.setattr("reflex.core.config.settings.openai_api_key", "", raising=False)
     for m in ["claude/claude-sonnet-4-5", "anthropic/x", "gemini/gemini-2.5-flash",
               "google/y", "openai/gpt-4o-mini", "gpt-4o", "openrouter/a", "deepseek/b"]:
         assert isinstance(get_provider(m), MockProvider), m

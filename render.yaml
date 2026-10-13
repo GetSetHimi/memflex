@@ -1,0 +1,37 @@
+# Render Blueprint — one-click public demo deploy.
+# Dashboard: New → Blueprint → select GetSetHimi/memflex.
+# Secrets (OPENROUTER_API_KEY) are sync:false → you set them in the
+# Render dashboard after import; they never live in git.
+services:
+  - type: web
+    name: memflex-demo
+    runtime: python
+    buildCommand: "pip install -e ."
+    # Render injects $PORT; the app binds to it.
+    startCommand: "uvicorn reflex.api.app:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /health
+    # Persistent disk: memories survive restarts/redeploys.
+    # NOTE: disks need a paid instance (Starter ~$7/mo). On the free tier
+    # there is no disk — the demo still works, but memory resets on restart.
+    disk:
+      name: memflex-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: REFLEX_DB_PATH
+        value: /data/reflex.db
+      - key: EMBEDDING_BACKEND
+        value: hash
+      - key: DEMO_MODE
+        value: true
+      - key: DEMO_MODELS
+        value: mock/*,openrouter/nvidia/nemotron-3.5-lightning:free
+      - key: DEMO_RATE_PER_MIN
+        value: "30"
+      - key: DEMO_MAX_CHARS
+        value: "300"
+      # Secrets — set these in the Render dashboard (never in git):
+      - key: OPENROUTER_API_KEY
+        sync: false

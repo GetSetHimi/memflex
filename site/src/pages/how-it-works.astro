@@ -92,8 +92,9 @@ score &lt; 0.65 → llm       # novel: think, distill, save</pre></div></div>
     <div class="card rv" style="margin-top:24px">
       <div class="askrow" style="margin-top:0">
         <select id="trymodel" aria-label="Model">
+          <option value="gemini/gemini-flash-latest" selected>gemini — Google Gemini</option>
+          <option value="openrouter/deepseek/deepseek-chat">openrouter — DeepSeek via OpenRouter</option>
           <option value="mock/mock-echo">mock — instant, keyless</option>
-          <option value="gemini/gemini-flash-latest">gemini — Google Gemini</option>
         </select>
         <input id="tryq" type="text" maxlength="300" value="When will my refund arrive?" aria-label="Your question" />
         <input id="tryttl" type="number" min="1" max="365" placeholder="TTL days (auto)" aria-label="Memory TTL in days" style="max-width:150px" title="How many days this answer stays in memory. Blank = auto (1 day for changing facts, 30 for stable ones)." />

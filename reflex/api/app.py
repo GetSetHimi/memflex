@@ -3,6 +3,9 @@
 from __future__ import annotations
 import hmac
 import os
+import threading
+import time
+from collections import deque
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -34,6 +37,32 @@ async def _auth_middleware(request: Request, call_next):
     resp.headers["X-Frame-Options"] = "DENY"
     resp.headers["Referrer-Policy"] = "no-referrer"
     return resp
+
+
+_demo_hits: dict[str, deque] = {}
+_demo_lock = threading.Lock()
+
+
+async def _demo_middleware(request: Request, call_next):
+    # Public-demo rate limit: per-IP sliding window, in-memory.
+    # Active only when DEMO_MODE=true; zero cost otherwise.
+    if settings.demo_mode and request.url.path != "/health":
+        ip = request.client.host if request.client else "unknown"
+        now = time.time()
+        with _demo_lock:
+            dq = _demo_hits.setdefault(ip, deque())
+            while dq and dq[0] <= now - 60:
+                dq.popleft()
+            if len(dq) >= max(1, settings.demo_rate_per_min):
+                return JSONResponse(
+                    {"detail": "Demo rate limit exceeded — try again in a minute."},
+                    status_code=429,
+                )
+            dq.append(now)
+            if len(_demo_hits) > 10000:
+                for k in [k for k, v in _demo_hits.items() if not v]:
+                    del _demo_hits[k]
+    return await call_next(request)
 
 
 @asynccontextmanager
@@ -72,6 +101,7 @@ setup_otel(app)
 _cors = [o.strip() for o in settings.cors_origins.split(",") if o.strip()] or ["*"]
 app.add_middleware(CORSMiddleware, allow_origins=_cors, allow_methods=["*"], allow_headers=["*"])
 app.middleware("http")(_auth_middleware)
+app.middleware("http")(_demo_middleware)
 app.include_router(router)
 
 @app.get("/health")

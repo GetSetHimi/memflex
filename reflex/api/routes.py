@@ -95,8 +95,27 @@ def _chat_sse_chunks(answer, reflex_id, model, tool_calls=None, finish=None):
     yield "data: [DONE]\n\n"
 
 
+def _demo_block() -> None:
+    """403 for write/admin endpoints on a public demo server."""
+    if settings.demo_mode:
+        raise HTTPException(403, "Disabled on the public demo server — self-host for full access.")
+
+
+def _demo_check_ask(req: AskRequest) -> None:
+    """Enforce demo allowlist + message cap. No-op unless DEMO_MODE=true."""
+    if not settings.demo_mode:
+        return
+    allowed = [p.strip() for p in (settings.demo_models or "mock/*").split(",") if p.strip()]
+    ok = any(req.llm == p or (p.endswith("*") and req.llm.startswith(p[:-1])) for p in allowed)
+    if not ok:
+        raise HTTPException(400, f"Demo server allows only: {', '.join(allowed)}.")
+    if len(req.message or "") > max(1, settings.demo_max_chars):
+        raise HTTPException(400, f"Demo messages are capped at {settings.demo_max_chars} characters.")
+
+
 @router.post("/ask", response_model=AskResponse)
 def ask(req: AskRequest):
+    _demo_check_ask(req)
     t0 = time.time()
     store, embed = deps.get_store(), deps.get_embed()
     serve_th = req.serve_threshold or settings.serve_threshold
@@ -294,6 +313,7 @@ def ask(req: AskRequest):
 
 @router.post("/remember", response_model=Memory)
 def remember(req: RememberRequest):
+    _demo_block()
     store = deps.get_store()
     m = Memory(subject=f"user:{req.user_id}", fact=req.fact, confidence=req.confidence)
     return store.save_memory(m)
@@ -308,6 +328,7 @@ def list_reflexes(user_id: str = ""):
 def save_reflex(req: SaveReflexRequest):
     """Explicit memorize/upsert — tool-using agents save their COMPOSED final
     answer here so repeats serve it without re-running tools or the LLM."""
+    _demo_block()
     store, embed = deps.get_store(), deps.get_embed()
     if not req.answer.strip():
         raise HTTPException(400, "answer must be non-empty")
@@ -354,6 +375,7 @@ def feedback(rid: str, req: FeedbackRequest):
 @router.patch("/reflexes/{rid}", response_model=Reflex)
 def patch_reflex(rid: str, req: PatchReflexRequest):
     """User controls: change a memory's TTL and/or confidence directly."""
+    _demo_block()
     store = deps.get_store()
     rx = store.get_reflex(rid)
     if not rx:
@@ -371,6 +393,7 @@ def patch_reflex(rid: str, req: PatchReflexRequest):
 
 @router.delete("/reflexes/{rid}")
 def delete_reflex(rid: str):
+    _demo_block()
     if not deps.get_store().delete_reflex(rid):
         raise HTTPException(404, "reflex not found")
     return {"deleted": rid}
@@ -378,6 +401,7 @@ def delete_reflex(rid: str):
 
 @router.post("/verify/run", response_model=VerifyResult)
 def verify_run(limit: int = 20):
+    _demo_block()
     store = deps.get_store()
     try:
         provider = get_provider(settings.default_llm_model)

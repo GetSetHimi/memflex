@@ -41,6 +41,14 @@ class Settings(BaseSettings):
     reflex_api_key: str = ""
     cors_origins: str = "*"
 
+    # Public demo lockdown. When true: only allowlisted models may be used,
+    # messages are length-capped, write/admin endpoints are disabled, and
+    # per-IP rate limiting applies. Self-hosted full servers leave this off.
+    demo_mode: bool = False
+    demo_models: str = "mock/*"
+    demo_rate_per_min: int = 30
+    demo_max_chars: int = 300
+
     class Config:
         env_file = ".env"
         extra = "ignore"

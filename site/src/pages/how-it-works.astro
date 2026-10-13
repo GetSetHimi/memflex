@@ -119,7 +119,13 @@ score &lt; 0.65 → llm       # novel: think, distill, save</pre></div></div>
       </div>
       <div id="tryans" class="tryans" aria-live="polite"><span class="muted">Your answer lands here — with the badge that proves where it came from.</span></div>
       <div class="muted" style="margin-top:10px;font-size:13px"><span id="trystatus">● checking connection…</span> · <span id="trycount">this page: 0 LLM calls · 0 reflex answers</span></div>
-      <p class="muted" style="font-size:13px;margin-top:10px">Runs against your local server. Mock needs nothing; Gemini needs a server-side key.</p>
+      <p class="muted" style="font-size:13px;margin-top:10px">This demo talks to a Memflex API — by default one on your own machine (<code>python3 -m reflex.api.app</code>). Mock needs nothing; Gemini needs a server-side key.</p>
+      <details style="margin-top:8px"><summary class="muted" style="cursor:pointer;font-size:13px">Using a hosted API instead?</summary>
+        <div class="askrow" style="margin-top:10px">
+          <input id="tryapi" type="text" value="http://localhost:8000" aria-label="API base URL" />
+        </div>
+        <p class="muted" style="font-size:13px">Paste a public Memflex API URL and the playground talks to that server instead. Saved in this browser only.</p>
+      </details>
     </div>
     <div style="margin-top:26px"><a class="btn btn-primary" href="/docs#quickstart">Try it in 5 minutes</a></div>
   </div>
@@ -128,6 +134,19 @@ score &lt; 0.65 → llm       # novel: think, distill, save</pre></div></div>
 (function () {
   let nLlm = 0, nRef = 0;
   const $ = id => document.getElementById(id);
+  const DEFAULT_API = 'http://localhost:8000';
+  function apiBase() {
+    try { return (localStorage.getItem('mx_api') || DEFAULT_API).replace(/\/$/, ''); }
+    catch (e) { return DEFAULT_API; }
+  }
+  try {
+    const saved = localStorage.getItem('mx_api');
+    if (saved && $('tryapi')) $('tryapi').value = saved;
+  } catch (e) {}
+  if ($('tryapi')) $('tryapi').addEventListener('change', () => {
+    try { localStorage.setItem('mx_api', $('tryapi').value.trim()); } catch (e) {}
+    ping(apiBase());
+  });
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   document.querySelectorAll('.trychip').forEach(c => c.addEventListener('click', () => { $('tryq').value = c.textContent; }));
   async function postOnce(base, payload) {
@@ -159,9 +178,9 @@ score &lt; 0.65 → llm       # novel: think, distill, save</pre></div></div>
       return false;
     }
   }
-  ping('http://localhost:8000');
+  ping(apiBase());
   $('trybtn').addEventListener('click', async () => {
-    const base = 'http://localhost:8000';
+    const base = apiBase();
     const msg = $('tryq').value.trim();
     const model = $('trymodel').value;
     const ttlRaw = ($('tryttl').value || '').trim();
@@ -194,7 +213,7 @@ score &lt; 0.65 → llm       # novel: think, distill, save</pre></div></div>
     } else {
       // Diagnose precisely: is the server down, or did /ask itself fail
       // (e.g. Gemini model without a server-side key → HTTP 502)?
-      let diagnosis = 'server is down or unreachable from your browser';
+      let diagnosis = 'server is down or unreachable from your browser — on the public site this usually means no API is running on your machine (start one locally) or you need a hosted API URL (see above)';
       try {
         const h = await fetch(base + '/health');
         if (h.ok) diagnosis = '/ask failed (' + esc(err) + ') — server is up, so check the model: Gemini needs a server-side key, try mock instead';

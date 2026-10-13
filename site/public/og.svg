@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#0a0a0b"/>
-  <rect x="80" y="200" width="88" height="88" rx="22" fill="#c8ff2e"/>
-  <path d="M102 262c12-3 15-24 27-27 7-1.8 12 2.4 15 6" stroke="#0c0e02" stroke-width="7" stroke-linecap="round" fill="none"/>
-  <circle cx="147" cy="224" r="6.5" fill="#0c0e02"/>
-  <text x="190" y="272" font-family="system-ui,sans-serif" font-size="72" font-weight="800" fill="#ededf0">memflex</text>
-  <text x="82" y="360" font-family="system-ui,sans-serif" font-size="34" fill="#9d9da8">Repeats answered in ~50ms at ₹0 — in any language.</text>
-  <text x="82" y="420" font-family="system-ui,sans-serif" font-size="26" fill="#c8ff2e">Agents call the LLM only for what they've never seen.</text>
-</svg>

@@ -1,0 +1,28 @@
+---
+import Base from "../../layouts/Base.astro";
+const nav = `<strong>Start</strong><a href="/docs">Overview</a><a href="/docs/quickstart">Quickstart</a><strong>Build</strong><a href="/docs/api">API reference</a><a href="/docs/integrations">SDK &amp; frameworks</a><a href="/docs/multilingual">Multilingual</a><strong>Run</strong><a href="/docs/hosting" class="active">Hosting</a><a href="/docs/security">Security</a>`;
+---
+<Base title="Memflex hosting — laptop to production" desc="$6 VPS to K8s. One SQLite file, almost nothing to operate." path="/docs/hosting">
+<div class="wrap" style="padding:64px 24px">
+  <span class="eyebrow">Docs · Hosting</span>
+  <h1>Laptop to production.</h1>
+  <div class="docs-grid" style="margin-top:30px">
+    <nav class="docs-nav" set:html={nav}></nav>
+    <div class="doc">
+      <h2>Docker Compose (recommended start)</h2>
+      <div class="codeblock"><button class="copy">Copy</button><pre>cp .env.example .env   # fill only keys you use
+docker compose -f docker-compose.prod.yml up -d --build
+# API :8000 · console :3001 (compose profile console) · data in reflex-data volume</pre></div>
+      <h2>Public URL ($6 VPS + Caddy)</h2>
+      <div class="codeblock"><button class="copy">Copy</button><pre># DNS: api.memflex.dev → VPS IP, console.memflex.dev → VPS IP
+# Caddyfile (auto-HTTPS):
+api.memflex.dev &#123; reverse_proxy localhost:8000 &#125;
+console.memflex.dev &#123; reverse_proxy localhost:3001 &#125;</pre></div>
+      <h2>Fly / Render / Railway</h2>
+      <p>Deploy from repo; persistent disk at <code>/data</code>, <code>REFLEX_DB_PATH=/data/reflex.db</code>. Need scale? Add the compose <code>db</code> service (<code>--profile pg</code>) and set <code>REFLEX_STORE=postgres</code> + <code>REFLEX_POSTGRES_DSN</code> — same API, pgvector speed.</p>
+      <h2>Ops signals</h2>
+      <p>Backup = copy <code>reflex.db</code> nightly. Scale when <code>/metrics</code> p95 rises. Erasure: <code>DELETE /reflexes/&#123;id&#125;</code>. Full guide: repo <code>docs/HOSTING.md</code>.</p>
+    </div>
+  </div>
+</div>
+</Base>

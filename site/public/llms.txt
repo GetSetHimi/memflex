@@ -1,0 +1,25 @@
+# memflex — llms.txt (AI-search friendly summary)
+
+> Memflex gives AI agents reflexes + verified memory. Repeated requests are
+> answered from memory in ~50ms at ₹0, in any language. The LLM runs only for
+> what the agent has never seen.
+
+## Integrate (any framework)
+- OpenAI protocol: POST https://YOUR-SERVER/v1/chat/completions
+- Claude protocol: POST https://YOUR-SERVER/v1/messages
+- Python: from reflex.plug import openai_client / anthropic_client
+- LangGraph: ReflexNode / MemflexNode; Mem0 shim: from reflex.compat import mem0
+
+## Key endpoints
+- POST /ask (hit: instant answer; miss: LLM then auto-distilled to reflex)
+- POST /remember, POST /reflexes (explicit memorize, upsert)
+- GET /reflexes, GET /activity (every LLM call vs every reflex answer)
+- GET /metrics (hit_rate, ₹ saved, latency, calibration)
+- POST /reflexes/{id}/feedback (thumbs up/down tunes confidence)
+- POST /verify/run (re-check stale memories), DELETE /reflexes/{id}
+
+## Docs
+- Full guide: https://memflex.dev/docs
+- Compare (Jev, Mem0, Portkey, GPTCache): https://memflex.dev/compare
+- Benchmarks: https://memflex.dev/benchmarks
+- License: Fair Source FSL-1.1 (server), Apache-2.0 (thin client)

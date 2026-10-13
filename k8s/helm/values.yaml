@@ -1,0 +1,9 @@
+replicaCount: 2
+image:
+  repository: reflex/api
+  tag: "0.3.0"
+env:
+  EMBEDDING_BACKEND: "bge-m3"
+  REFLEX_DB_PATH: "/data/reflex.db"
+persistence:
+  size: 10Gi

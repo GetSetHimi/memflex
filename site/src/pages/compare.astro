@@ -1,0 +1,58 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Memflex vs Jev, Mem0, Portkey, GPTCache" desc="Honest comparison: cache ≠ memory, and nobody verifies. Researched October 2026." path="/compare">
+<div class="wrap" style="padding:64px 24px 20px">
+  <span class="eyebrow">Landscape</span>
+  <h1>Cache ≠ memory.<br />And nobody verifies.</h1>
+  <p class="lead">Researched October 2026 from docs, pricing pages, and benchmarks — not marketing.</p>
+</div>
+<section class="block">
+  <div class="wrap">
+    <div class="card" style="overflow-x:auto">
+      <table class="spec">
+        <tr><th></th><th>Memflex</th><th>Jev (TypeSafe)</th><th>Mem0</th><th>Portkey</th><th>GPTCache</th></tr>
+        <tr><td>Answers repeats, zero LLM</td><td class="tick">✅ core</td><td class="tick">✅ (trained)</td><td class="cross">❌ facts only</td><td class="tick">✅ cached</td><td class="tick">✅ cached</td></tr>
+        <tr><td>Calibrated confidence</td><td class="tick">✅ per-reflex</td><td class="tick">✅ RLCD</td><td class="cross">partial</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+        <tr><td>Self-correction loop</td><td class="tick">✅ verify + 👎</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+        <tr><td>Cost on repeats</td><td class="tick">₹0</td><td>$42/B tokens</td><td>$19+/mo + tokens</td><td>per-token + Enterprise</td><td>free, self-run</td></tr>
+        <tr><td>Multilingual-first</td><td class="tick">✅ 19 langs tested</td><td class="cross">EN-first</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td></tr>
+        <tr><td>Self-host, 1 command</td><td class="tick">✅ SQLite / Postgres</td><td class="cross">❌ hosted</td><td>partial</td><td>partial / Enterprise</td><td class="tick">✅ + Milvus</td></tr>
+        <tr><td>Unseen generalization</td><td class="cross">❌ → LLM</td><td class="tick">✅ trained</td><td class="tick">✅ LLM</td><td class="tick">✅ LLM</td><td class="tick">✅ LLM</td></tr>
+      </table>
+    </div>
+    <div class="card rv" style="margin-top:18px;border-color:var(--accent)">
+      <h3>Have a doubt? Ask us.</h3>
+      <p class="muted" style="margin-top:0">Confused by the table, or wondering if Memflex fits <b>your</b> stack? Write your question — it opens in your email, addressed to us.</p>
+      <div class="askrow">
+        <input id="qname" type="text" maxlength="80" placeholder="Your name (optional)" style="max-width:220px" />
+      </div>
+      <div style="margin-top:10px">
+        <textarea id="q" rows="3" maxlength="1000" placeholder="e.g. We run 2 lakh support chats/month on Intercom — will Memflex cut our bill?"></textarea>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="askbtn">Ask via email</button>
+        <a class="btn" href="/#faq">Read FAQ first</a>
+      </div>
+      <p class="muted" style="font-size:13px;margin-top:10px">Prefer public? <a href="https://github.com/memflex">Open a GitHub discussion →</a></p>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <div class="card rv"><h3>Closest overlap: Portkey semantic cache</h3><p>Real cosine-threshold caching — but Enterprise-gated, no confidence, no memory, no multilingual support. Cache is not memory.</p></div>
+      <div class="card rv"><h3>Closest ancestor: GPTCache (2023)</h3><p>Semantic cache lib + server. No gating, no verification, no memory layer, Milvus plumbing. Memflex is its 2026 rebuild for agents.</p></div>
+      <div class="card rv"><h3>Memory leader: Mem0 ($24M, 62k⭐)</h3><p>Cloud-first facts that <em>reduce tokens</em> — every request still burns an LLM call. Memflex eliminates the call.</p></div>
+      <div class="card rv"><h3>Upgrade path: Jev</h3><p>When you need <em>unseen</em> structured decisions to generalize, route low-confidence cases to Jev like any System-2 provider.</p></div>
+    </div>
+    <p class="muted" style="margin-top:22px">The moat is a combination, not a trick: zero-call repeats + verified memory + multilingual + free self-host. Where giants overlap, Memflex plugs in beside them.</p>
+  </div>
+</section>
+<script>
+document.getElementById('askbtn').addEventListener('click', () => {
+  const name = (document.getElementById('qname').value || '').trim();
+  const msg = (document.getElementById('q').value || '').trim();
+  if (!msg) { document.getElementById('q').focus(); return; }
+  const subject = encodeURIComponent('Memflex question' + (name ? ' from ' + name : '') + ' (compare page)');
+  const body = encodeURIComponent((name ? 'Hi, I am ' + name + '.\n\n' : 'Hi,\n\n') + msg + '\n\n— asked from memflex.dev/compare');
+  location.href = 'mailto:contact@memflex.dev?subject=' + subject + '&body=' + body;
+});
+</script>
+</Base>

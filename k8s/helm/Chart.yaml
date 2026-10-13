@@ -1,0 +1,4 @@
+apiVersion: v2
+name: memflex
+version: 0.3.0
+description: Memflex — self-hostable reflex + memory layer

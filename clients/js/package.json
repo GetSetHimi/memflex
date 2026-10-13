@@ -1,0 +1,14 @@
+{
+  "name": "memflex",
+  "version": "0.3.0",
+  "description": "Thin JavaScript client for Memflex — reflexes & verified memory for AI agents (Apache-2.0)",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": { ".": { "types": "./src/index.d.ts", "default": "./src/index.js" } },
+  "engines": { "node": ">=18" },
+  "license": "Apache-2.0",
+  "repository": { "type": "git", "url": "https://github.com/memflex/memflex" },
+  "keywords": ["memflex", "ai-agents", "memory", "semantic-cache", "openai"],
+  "scripts": { "test": "node --test test/" }
+}

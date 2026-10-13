@@ -1,0 +1,12 @@
+Memflex™
+Copyright (c) 2026 Himanshu Sharma. All rights reserved except as granted
+under the licenses below.
+
+- Server, dashboard, examples, docs: Functional Source License v1.1
+  (FSL-1.1-ALv2) — see LICENSE. Converts to Apache-2.0 on the second
+  anniversary of each published version.
+- Thin client SDK (reflex/client.py, reflex/plug.py): Apache License 2.0 —
+  see LICENSE-CLIENT.
+
+"Memflex" is claimed as a trademark of Himanshu Sharma. The FSL and
+Apache-2.0 licenses grant no trademark rights beyond identifying origin.

@@ -1,0 +1,39 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Memflex pricing — open core" desc="Free self-host forever. Paid when you want zero ops or a competing service license." path="/pricing">
+<div class="wrap" style="padding:64px 24px 20px">
+  <span class="eyebrow">Open core</span>
+  <h1>Free to run.<br />Fair to build on.</h1>
+  <p class="lead">Server is Fair Source (free for nearly all uses, Apache in 2 years). Thin client is Apache-2.0 forever.</p>
+</div>
+<section class="block">
+  <div class="wrap">
+    <p class="lead rv" style="margin-bottom:26px">Same product, same endpoints — the difference is <b>who operates it</b> and <b>where your data lives</b>.</p>
+    <div class="grid3">
+      <div class="card rv">
+        <h3>Self-host</h3><div class="k">₹<em>0</em></div>
+        <p><b>You run it.</b> 1 command, 1 SQLite file, dashboard included. Data never leaves your machine.</p>
+        <p class="muted">✓ All features, forever<br />✓ Fair Source license<br />✓ Community support (GitHub)</p>
+        <p class="muted"><b>Best for:</b> developers, side projects, data-sovereignty purists.</p>
+        <div style="margin-top:14px"><a class="btn btn-sm" href="/docs#quickstart">Start now</a></div>
+      </div>
+      <div class="card rv" style="border-color: var(--accent)">
+        <h3>Managed <span class="muted" style="font-weight:400">· soon</span></h3><div class="k">₹<em>999</em><span class="muted" style="font-size:15px">/mo</span></div>
+        <p><b>We run it.</b> Hosted API + team console — migration is literally one <code>base_url</code> change. Zero ops: updates, backups, scaling, monitoring hum sambhalte hain.</p>
+        <p class="muted">✓ Everything in Self-host<br />✓ 99.9% uptime SLA<br />✓ 10 lakh asks/mo included, then metered<br />✓ Team seats + shared console views<br />✓ India-region hosting option<br />✓ Email support (48h)</p>
+        <p class="muted"><b>Best for:</b> startups &amp; teams shipping agents who don't want infra duty.</p>
+        <div style="margin-top:14px"><a class="btn btn-sm btn-primary" href="mailto:contact@memflex.dev?subject=Managed%20waitlist">Join the waitlist</a></div>
+      </div>
+      <div class="card rv">
+        <h3>Enterprise</h3><div class="k"><em>Custom</em></div>
+        <p><b>Runs inside YOUR cloud.</b> Our binary + Helm chart on your K8s/VPC — data never touches us. Plus the paperwork regulated teams need.</p>
+        <p class="muted">✓ Everything in Managed<br />✓ SSO/SAML + RBAC<br />✓ Audit logs + custom retention<br />✓ DPA, SOC 2 reports, security review<br />✓ 99.99% SLA + private Slack support<br />✓ Competing-use commercial license<br />✓ Onboarding + roadmap input</p>
+        <p class="muted"><b>Best for:</b> banks, healthcare, govt, scale-ups — compliance + control.</p>
+        <div style="margin-top:14px"><a class="btn btn-sm" href="mailto:contact@memflex.dev?subject=Enterprise%20enquiry">Talk to us</a></div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:48px">Fair Source: free to run and build on — <a href="/docs/security">license details →</a></p>
+  </div>
+</section>
+</Base>

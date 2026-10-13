@@ -1,0 +1,23 @@
+---
+import Base from "../../layouts/Base.astro";
+const nav = `<strong>Start</strong><a href="/docs">Overview</a><a href="/docs/quickstart">Quickstart</a><strong>Build</strong><a href="/docs/api">API reference</a><a href="/docs/integrations">SDK &amp; frameworks</a><a href="/docs/multilingual">Multilingual</a><strong>Run</strong><a href="/docs/hosting">Hosting</a><a href="/docs/security" class="active">Security</a>`;
+---
+<Base title="Memflex security" desc="Auth, hardening checklist, disclosure." path="/docs/security">
+<div class="wrap" style="padding:64px 24px">
+  <span class="eyebrow">Docs · Security</span>
+  <h1>Locked by default when hosted.</h1>
+  <div class="docs-grid" style="margin-top:30px">
+    <nav class="docs-nav" set:html={nav}></nav>
+    <div class="doc">
+      <h2>Auth</h2>
+      <p>Set <code>MEMFLEX_API_KEY</code> → every route but <code>/health</code> requires <code>X-API-Key</code> (or <code>Authorization: Bearer</code>), constant-time compared. Empty = open local mode. Console forwards <code>MEMFLEX_API_KEY</code> automatically.</p>
+      <h2>Hardening checklist</h2>
+      <p>Security headers on (<code>nosniff</code>, <code>DENY</code> framing, no-referrer) · CORS via <code>CORS_ORIGINS</code> allowlist (default <code>*</code> is local-dev only) · generic upstream 502s (no key/config leakage) · secrets in env/secret-store only — never images or git · <code>DELETE /reflexes/&#123;id&#125;</code> for erasure requests · nightly <code>reflex.db</code> snapshots.</p>
+      <h2>Known limits (honest)</h2>
+      <p>No per-tenant isolation yet (single-tenant key auth today; namespacing is roadmap) · no built-in rate limiting (use Caddy/nginx) · verification re-asks go to your configured LLM (audit <code>/activity</code>).</p>
+      <h2>Disclosure</h2>
+      <p>Found something? Open a private security advisory on GitHub (or the contact on memflex.dev at launch). See <code>SECURITY.md</code> in the repo.</p>
+    </div>
+  </div>
+</div>
+</Base>

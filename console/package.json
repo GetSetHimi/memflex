@@ -1,0 +1,17 @@
+{
+  "name": "memflex-console",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Memflex console — Next.js observability UI for reflexes & verified memory",
+  "license": "SEE LICENSE IN PARENT DIRECTORY (FSL-1.1-ALv2)",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000"
+  },
+  "dependencies": {
+    "next": "^15.5.27",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}

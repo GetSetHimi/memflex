@@ -1,0 +1,67 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          pip install -e ".[dev]"
+      - name: Lint (ruff — must be clean)
+        run: |
+          python -m ruff check reflex dashboard examples tests
+      - name: Tests (keyless hash backend, temp DBs per module)
+        run: |
+          EMBEDDING_BACKEND=hash python -m pytest tests -q
+      - name: Postgres store (real pgvector service)
+        run: |
+          docker run -d --name pg -p 5433:5432 -e POSTGRES_PASSWORD=ci \
+            pgvector/pgvector:pg17
+          sleep 8
+          PGPASSWORD=ci psql -h localhost -p 5433 -U postgres \
+            -c "CREATE DATABASE reflex_test;" -c "CREATE EXTENSION vector;"
+          MEMFLEX_TEST_PG_DSN="postgresql://postgres:ci@localhost:5433/reflex_test" \
+            EMBEDDING_BACKEND=hash python -m pytest tests/test_postgres.py -q
+
+  js-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test memflex npm client shape (no server needed)
+        run: |
+          node --check clients/js/src/index.js
+          node -e "import('./clients/js/src/index.js').then(m => console.log('exports:', Object.keys(m).join(',')))"
+
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build marketing site (must be clean)
+        run: |
+          npm --prefix site install --no-audit --no-fund
+          npm --prefix site run build
+
+  console:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build Next.js console (must be clean)
+        run: |
+          npm --prefix console install --no-audit --no-fund
+          npm --prefix console run build

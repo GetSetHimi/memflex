@@ -1,0 +1,81 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      REFLEX_DB_PATH: /data/reflex.db
+    volumes:
+      - reflex-data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    ports:
+      - "8501:8501"
+    env_file: .env
+    environment:
+      REFLEX_API_URL: http://api:8000
+    depends_on:
+      - api
+    restart: always
+
+  # Production Postgres + pgvector (optional). Use with:
+  #   REFLEX_STORE=postgres
+  #   REFLEX_POSTGRES_DSN=postgresql://memflex:changeme@db:5432/memflex
+  # Default stays SQLite (zero deps). See docs/HOSTING.md.
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: memflex
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DB: memflex
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U memflex"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles: ["pg"]
+
+  # memflex.dev marketing site + docs (static; serve behind Caddy, see docs/HOSTING.md)
+  site:
+    image: nginx:alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./site/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+    restart: always
+    profiles: ["site"]
+
+  # Next.js console (static export of console/out). Replaces the Streamlit
+  # dashboard (kept as fallback): faster, SEO-friendly, no Python needed.
+  # Build first: npm --prefix console run build
+  console:
+    image: nginx:alpine
+    ports:
+      - "3001:80"
+    volumes:
+      - ./console/out:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+    restart: always
+    profiles: ["console"]
+
+volumes:
+  reflex-data:
+  pg-data:

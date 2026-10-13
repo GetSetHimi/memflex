@@ -1,0 +1,9 @@
+[
+  {"message": "मेरा रिफंड कब आएगा?", "expect_contains": "रिफंड"},
+  {"message": "mera refund kab ayega?", "expect_contains": "रिफंड"},
+  {"message": "मेरा refund वापस कब आएगा?", "expect_contains": "रिफंड"},
+  {"message": "order cancel karna hai", "expect_contains": "कैंसिल"},
+  {"message": "डिलीवरी स्टेटस क्या है?", "expect_contains": "रास्ते"},
+  {"message": "delivery status kya hai?", "expect_contains": "रास्ते"},
+  {"message": "मेरा ऑर्डर कहाँ है? ORD-9981", "expect_contains": "रास्ते"}
+]

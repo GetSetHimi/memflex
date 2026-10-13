@@ -1,0 +1,198 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Memflex — reflexes & verified memory for AI agents" desc="Agents call the LLM only for what they've never seen. Repeats answered in ~50ms at ₹0, in any language." path="/">
+<div class="wrap hero">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow">Fair Source · Self-host in 1 command</span>
+      <h1>Agents call the LLM only for what they've never seen.</h1>
+      <p class="lead">Memflex gives AI agents reflexes + verified memory. Everything seen before answers in ~50ms at ₹0 — in any language.</p>
+      <div class="hero-badges">
+        <span><b>73.3%</b> served from memory</span>
+        <span><b>0ms</b> repeat latency</span>
+        <span><b>14+</b> languages</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a class="btn btn-primary" href="/docs#quickstart">Get started in 5 min</a>
+        <a class="btn" href="/how-it-works">How it works</a>
+      </div>
+    </div>
+    <div class="term" aria-label="Live demo">
+      <div class="term-bar"><i></i><i></i><i></i><span>memflex — live</span></div>
+      <div class="term-body" id="demo"></div>
+    </div>
+  </div>
+  <div class="strip rv">
+    <div><b><em>73.3%</em></b><span>asks served from memory (30-ask bench)</span></div>
+    <div><b>~<em>0</em>ms</b><span>repeat latency (vs 7–10s cloud LLM)</span></div>
+    <div><b>₹<em>0</em></b><span>cost per memory answer</span></div>
+    <div><b><em>0</em></b><span>LLM calls on a memory hit — guaranteed</span></div>
+  </div>
+</div>
+
+<section class="block">
+  <div class="wrap">
+    <div class="card rv" style="border-color:var(--accent)">
+      <h2 class="rv" style="margin-bottom:8px">Don't take our word for it — try it.</h2>
+      <p class="lead rv" style="margin-bottom:20px">Ask anything twice on the <a href="/how-it-works#try">live playground</a> — first the LLM thinks, then memory answers free. Samples included.</p>
+      <a class="btn btn-primary" href="/how-it-works#try">Open the playground</a>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <span class="eyebrow rv">Drop-in</span>
+    <h2 class="rv">One line. Any framework.</h2>
+    <p class="lead rv">Point your existing OpenAI or Claude client at Memflex. Same API, plus <code>reflex_source</code> on every answer.</p>
+    <div class="tabs rv" style="margin-top:26px">
+      <div class="tab-btns"><button class="on">Python</button><button>cURL</button><button>Node</button></div>
+      <div class="tab-pane on"><div class="codeblock"><button class="copy">Copy</button><pre>from reflex.plug import openai_client
+
+chat = openai_client()  # -&gt; your Memflex server
+r = chat.chat.completions.create(
+    model="claude/claude-sonnet-4-5",
+    messages=[&#123;"role": "user", "content": "When will my refund arrive?"&#125;],
+    user="u123",
+)
+print(r.choices[0].message.content)  # your language, answered in-kind (try German or Spanish too)
+print(r.reflex_source, r.reflex_confidence)  # reflex 0.9</pre></div></div>
+      <div class="tab-pane"><div class="codeblock"><button class="copy">Copy</button><pre># 1st time: "source": "llm" — thinks, then memorizes
+curl -X POST http://localhost:8000/ask \
+  -H 'Content-Type: application/json' \
+  -d '&#123;"user_id":"u123","message":"Wo ist meine Rückerstattung?",
+       "llm":"mock/mock-echo"&#125;'
+
+# 2nd time: "source": "reflex" — memory, ~0ms, ₹0</pre></div></div>
+      <div class="tab-pane"><div class="codeblock"><button class="copy">Copy</button><pre>import OpenAI from "openai";
+
+const chat = new OpenAI(&#123; baseURL: "http://localhost:8000/v1", apiKey: "x" &#125;);
+const r = await chat.chat.completions.create(&#123;
+  model: "ollama-cloud/gpt-oss:20b",
+  messages: [&#123; role: "user", content: "Where is my order?" &#125;],
+&#125;);
+// r.reflex_source === "reflex" — zero LLM call</pre></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <span class="eyebrow rv">Why it works</span>
+    <h2 class="rv">System&nbsp;1 for agents, System&nbsp;2 on standby.</h2>
+    <div class="grid3" style="margin-top:26px">
+      <div class="card rv"><h3>Check memory first</h3><p>Every request is embedded and scored in &lt;10ms: similarity × track-record × recency − corrections. Above 0.85 → instant answer, zero LLM calls.</p></div>
+      <div class="card rv"><h3>Think only on novelty</h3><p>First-seen situations go to your LLM (OpenAI, Claude, Gemini, Ollama, DeepSeek…), then distill into a reflex with confidence + TTL. Next identical request is free.</p></div>
+      <div class="card rv"><h3>Never trust blindly</h3><p>Stale memories re-verify, wrong ones die after a few 👎, volatile answers expire in 1 day. <a href="/how-it-works">How it works →</a></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <span class="eyebrow rv">Use cases</span>
+    <h2 class="rv">Where it wins. With receipts.</h2>
+    <p class="lead rv">Repeat + stable + high-volume. Each card shows a real shape of answer — try them on the <a href="/how-it-works#try">playground</a>.</p>
+    <div class="grid3" style="margin-top:26px">
+      <div class="card rv"><h3>Support bots</h3><p>60–80% of tickets are repeats. Second identical ask costs nothing.</p><div class="usex"><span class="trybadge wait">LLM · 1st</span><code>“When will my refund arrive?”</code><span class="trybadge go">REFLEX 0.90 · 2nd</span><code>same answer · 1ms · ₹0</code></div></div>
+      <div class="card rv"><h3>Triage &amp; routing</h3><p>Classify once, route forever — as typed JSON your code can branch on.</p><div class="usex"><span class="trybadge wait">LLM · 1st</span><code>“REFUND-2211 status?”</code><span class="trybadge go">REFLEX · always</span><code>&#123;"refund_status": "processing"&#125;</code></div></div>
+      <div class="card rv"><h3>Voice &amp; live chat</h3><p>7-second pauses kill realtime. Memory answers in milliseconds.</p><div class="usex"><span class="trybadge wait">LLM · 1st</span><code>“Where's my order?” · 8.2s</code><span class="trybadge go">REFLEX · 2nd</span><code>same answer · 0ms</code></div></div>
+      <div class="card rv"><h3>Tool-agents</h3><p>Planner + tools run once; the composed answer is memorized.</p><div class="usex"><span class="trybadge wait">LLM+tools · 1st</span><code>compute_refund_eta() fired</code><span class="trybadge go">REFLEX · 2nd</span><code>zero tools · zero LLM</code></div></div>
+      <div class="card rv"><h3>Approval gates</h3><p>Auto-approve the calibrated band, escalate the rest.</p><div class="usex"><span class="trybadge wait">LLM · 1st</span><code>conf 0.80 → human</code><span class="trybadge go">REFLEX · later</span><code>conf 0.93 → auto-approve</code></div></div>
+      <div class="card rv"><h3>Extraction &amp; forms</h3><p>Same schema, same fields, every time — no per-row LLM tax.</p><div class="usex"><span class="trybadge wait">LLM · 1st</span><code>order → &#123;id, status&#125;</code><span class="trybadge go">REFLEX · 1000th</span><code>same schema · ₹0</code></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <span class="eyebrow rv">Every language</span>
+    <h2 class="rv">Every language. No favorites.</h2>
+    <p class="lead rv">Same-language repeats work everywhere — English, Hindi, German, Tamil, Japanese, Arabic and more. Spelling variants converge via tiny language plugins; a new one is a 5-minute dict.</p>
+    <div class="chips rv">
+      <span>When will my refund arrive?</span><span>Wo ist meine Rückerstattung?</span>
+      <span>¿Dónde está mi entrega?</span><span>Quand mon remboursement arrivera-t-il ?</span>
+      <span>எனது பணம் திரும்ப எப்போது வரும்?</span><span>返金はいつ届きますか?</span>
+      <span>متى سيصل استرداد أموالي؟</span><span>我的退款什么时候到？</span>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <span class="eyebrow rv">Landscape</span>
+    <h2 class="rv">Cache ≠ memory. And nobody verifies.</h2>
+    <p class="lead rv">Portkey gates semantic cache behind Enterprise. Mem0 still runs the LLM on every request. GPTCache never learned confidence. <a href="/compare">Full comparison →</a></p>
+    <div class="grid3" style="margin-top:26px">
+      <div class="card rv"><div class="k"><em>₹0</em></div><p>per repeat answer. Portkey charges per token forever; Jev charges per billion.</p></div>
+      <div class="card rv"><div class="k"><em>1</em> command</div><p>self-host: SQLite file, no vector DB, no external services. Data never leaves.</p></div>
+      <div class="card rv"><div class="k"><em>0</em> hallucinations</div><p>served from memory — nothing is generated on a hit. Wrong memories self-bury.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <span class="eyebrow rv">Open core</span>
+    <h2 class="rv">Free to run. Fair to build on.</h2>
+    <p class="lead rv">Server is Fair Source (free for nearly all uses, Apache in 2 years). Thin client is Apache-2.0 forever. <a href="/pricing">Pricing →</a></p>
+    <div style="margin-top:26px;display:flex;gap:12px;flex-wrap:wrap">
+      <a class="btn btn-primary" href="/docs#quickstart">Start self-hosting</a>
+      <a class="btn" href="https://github.com/memflex">Star on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="faq">
+  <div class="wrap">
+    <span class="eyebrow rv">FAQ</span>
+    <h2 class="rv">Asked by every agent builder.</h2>
+    <div style="margin-top:26px;max-width:760px">
+      <details class="faq rv"><summary>Will memory make my LLM hallucinate?</summary><p>No — hits serve stored answers verbatim; nothing is generated. Serving is gated by calibrated confidence, wrong memories die after a few thumbs-downs, and volatile answers expire in a day. <a href="/how-it-works">How trust works →</a></p></details>
+      <details class="faq rv"><summary>Which languages work?</summary><p>Every language. Repeats match in Hindi, German, Tamil, Japanese, Arabic and more; spelling variants converge via tiny plugins. A new language is a 5-minute dict. <a href="/docs/multilingual">Multilingual →</a></p></details>
+      <details class="faq rv"><summary>How is this different from Mem0 or GPTCache?</summary><p>Mem0 stores facts but still runs the LLM on every request. GPTCache caches with no confidence or verification. Memflex answers repeats with zero calls <em>and</em> verifies what it remembers. <a href="/compare">Full comparison →</a></p></details>
+      <details class="faq rv"><summary>Do I need an API key to start?</summary><p>No. The built-in mock runs the full loop keyless. Plug OpenAI, Claude, Gemini, Ollama or DeepSeek keys when you want real inference.</p></details>
+      <details class="faq rv"><summary>Where does my data live?</summary><p>In one SQLite file on your machine. Nothing leaves unless you configure an upstream LLM. Delete any memory anytime.</p></details>
+      <details class="faq rv"><summary>What does it cost?</summary><p>Self-hosting is free forever; memory answers cost ₹0 by design. A managed tier comes later. <a href="/pricing">Pricing →</a></p></details>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <span class="eyebrow rv">Contact us</span>
+    <h2 class="rv">Building agents? Talk to us.</h2>
+    <p class="lead rv">Design partnerships, enterprise questions, language requests, or just show us what you built — we reply.</p>
+    <div class="grid2" style="margin-top:26px;max-width:760px">
+      <div class="card rv"><h3>Email</h3><p><a href="mailto:contact@memflex.dev">contact@memflex.dev</a><br /><span class="muted">Partnerships, enterprise, press.</span></p></div>
+      <div class="card rv"><h3>GitHub</h3><p><a href="https://github.com/memflex">github.com/memflex</a><br /><span class="muted">Issues, ideas, pull requests.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<script>
+const lines = [
+  ['t-dim', '$ ask "When will my refund arrive?"'],
+  ['t-out', '"source": ', 't-llm', '"llm"', 't-out', ' · thinks, memorizes · 812ms'],
+  ['t-dim', '$ ask "When will my refund arrive?"'],
+  ['t-out', '"source": ', 't-reflex', '"reflex"', 't-out', ' · conf 0.90 · 1ms · ₹0'],
+  ['t-dim', '$ ask "Wo ist meine Rückerstattung?"'],
+  ['t-out', '"source": ', 't-reflex', '"reflex"', 't-out', ' · conf 0.90 · 0ms · ₹0'],
+  ['t-dim', '$ metrics'],
+  ['t-out', 'hit_rate 73.3% · saved ₹0.24 · 8 reflexes'],
+];
+const el = document.getElementById('demo');
+let li = 0;
+function render(i, done) {
+  if (i >= lines.length) { el.innerHTML += '<div class="t-caret"></div>'; return; }
+  const div = document.createElement('div');
+  const parts = lines[i];
+  let h = '';
+  for (let j = 0; j < parts.length; j += 2) h += `<span class="${parts[j]}">${parts[j+1] || ''}</span>`;
+  div.innerHTML = h; el.appendChild(div);
+  setTimeout(() => render(i + 1), i % 2 ? 900 : 650);
+}
+setTimeout(() => render(0), 500);
+</script>
+</Base>

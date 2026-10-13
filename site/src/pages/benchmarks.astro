@@ -1,0 +1,36 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Memflex benchmarks — measured, reproducible" desc="30-ask support workload: 73.3% from memory. Rerun instructions included." path="/benchmarks">
+<div class="wrap" style="padding:64px 24px 20px">
+  <span class="eyebrow">Measured · reproducible</span>
+  <h1>73.3% from memory.<br />Rerun it yourself.</h1>
+  <p class="lead">No cherry-picked charts. Fixed workload, fresh DB, keyless backend — one script.</p>
+</div>
+<section class="block">
+  <div class="wrap">
+    <div class="strip">
+      <div><b><em>73.3%</em></b><span>asks served from memory (22/30)</span></div>
+      <div><b><em>8</em></b><span>distinct reflexes learned (10 intents)</span></div>
+      <div><b>~<em>0.1</em>ms</b><span>memory path (mock; 7–10s cloud LLM)</span></div>
+      <div><b>₹<em>0.24</em></b><span>metered savings on 30 asks</span></div>
+    </div>
+    <h2 style="margin-top:44px">Workload</h2>
+    <p class="lead">10 intents × 3 rounds (English, German, Spanish, French + terse follow-ups), fresh SQLite, <code>EMBEDDING_BACKEND=hash</code>. Each intent learns one reflex — 10 intents, 8 reflexes.</p>
+    <div class="tabs" style="margin-top:22px">
+      <div class="tab-btns"><button class="on">Reproduce</button><button>Scale math</button></div>
+      <div class="tab-pane on"><div class="codeblock"><button class="copy">Copy</button><pre>pip install memflex
+python examples/support-agent.py
+curl http://localhost:8000/metrics
+# → hit_rate, avg_latency_ms, cost_saved_30d_inr, calibration[]</pre></div></div>
+      <div class="tab-pane"><div class="codeblock"><button class="copy">Copy</button><pre>100,000 asks/month × 70% repeats
+= 70,000 free answers
+× ₹0.30–0.50 per LLM call
+= ₹21,000–35,000/month saved per lakh asks
++ voice/chat UX: 0ms instead of seconds</pre></div></div>
+    </div>
+    <h2 style="margin-top:44px">What we don't claim</h2>
+    <p class="lead">Mock-backend latency flatters the absolute numbers — the honest delta is memory-path ms vs your LLM's seconds (measured 7–10s on Ollama Cloud). Hit-rate depends on your repeat rate: FAQ/triage/extraction workloads win; unique-every-time workloads gain nothing. Calibration numbers are self-reported from hit consistency until a third-party multilingual split exists.</p>
+  </div>
+</section>
+</Base>

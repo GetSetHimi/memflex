@@ -1,0 +1,93 @@
+---
+interface Props { title: string; desc: string; path?: string; }
+const { title, desc, path = "" } = Astro.props;
+import "../styles/global.css";
+const canonical = `https://memflex.dev${path}`;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={desc} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={desc} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content="https://memflex.dev/og.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="28" height="28" rx="8" fill="#c8ff2e"/>
+          <path d="M9 21c4-1 5-8 9-9 2.4-.6 4 .8 5 2" stroke="#0c0e02" stroke-width="2.6" stroke-linecap="round"/>
+          <circle cx="22.5" cy="11.5" r="2.2" fill="#0c0e02"/>
+        </svg>
+        memflex
+      </a>
+      <nav class="nav-links" id="navlinks">
+        <a href="/how-it-works">How it works</a>
+        <a href="/docs">Docs</a>
+        <a href="/compare">Compare</a>
+        <a href="/benchmarks">Benchmarks</a>
+        <a href="/pricing">Pricing</a>
+      </nav>
+      <div class="nav-cta">
+        <a class="btn btn-sm" href="https://github.com/memflex">GitHub</a>
+        <a class="btn btn-sm btn-primary" href="/docs#quickstart">Get started</a>
+        <button class="burger" id="burger" aria-label="Menu">≡</button>
+      </div>
+    </div>
+  </header>
+  <main><slot /></main>
+  <footer>
+    <div class="wrap foot-grid">
+      <div>
+        <strong style="color: var(--text)">memflex</strong><br />
+        Reflexes &amp; verified memory for AI agents.<br />
+        <span class="muted">Fair Source (FSL-1.1) · © 2026 Himanshu Sharma</span>
+      </div>
+      <nav>
+        <a href="/docs">Docs</a><a href="/compare">Compare</a>
+        <a href="/benchmarks">Benchmarks</a><a href="/pricing">Pricing</a>
+        <a href="https://github.com/memflex">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    const bar = document.getElementById('progress');
+    addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+      if (bar) bar.style.width = (p * 100) + '%';
+    }, { passive: true });
+    const b = document.getElementById('burger'), n = document.getElementById('navlinks');
+    b && b.addEventListener('click', () => n && n.classList.toggle('open'));
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }), { threshold: 0.12 });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+    document.querySelectorAll('.tab-btns').forEach(bar2 => {
+      const panes = bar2.parentElement.querySelectorAll('.tab-pane');
+      bar2.querySelectorAll('button').forEach((btn, i) => btn.addEventListener('click', () => {
+        bar2.querySelectorAll('button').forEach(x => x.classList.remove('on'));
+        panes.forEach(x => x.classList.remove('on'));
+        btn.classList.add('on'); panes[i] && panes[i].classList.add('on');
+      }));
+    });
+    document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', async () => {
+      const pre = btn.parentElement.querySelector('pre');
+      try { await navigator.clipboard.writeText(pre.innerText); btn.textContent = 'Copied'; }
+      catch { btn.textContent = 'Select + copy'; }
+      setTimeout(() => btn.textContent = 'Copy', 1400);
+    }));
+  </script>
+</body>
+</html>

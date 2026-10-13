@@ -1,0 +1,58 @@
+/* Memflex console skin — matches memflex.dev. Loaded via components/ui.py. */
+:root { --mx-accent: #c8ff2e; --mx-border: #232329; --mx-muted: #9d9da8; }
+.block-container {
+  max-width: 100%;
+  padding: 1.6rem clamp(1rem, 4vw, 3rem) 3rem;
+}
+h1 { font-size: clamp(1.5rem, 3.6vw, 2.4rem) !important; }
+h2 { font-size: clamp(1.15rem, 2.4vw, 1.5rem) !important; }
+.mx-kpis {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 12px; margin: 6px 0 4px;
+}
+/* Streamlit chrome must not overlap/cut our topbar: transparent fixed
+   header, no toolbar/decoration/menu crowding the top edge. (Own Refresh
+   button exists in the sidebar, so hiding the menu loses nothing.) */
+header[data-testid="stHeader"] { background: transparent; }
+div[data-testid="stToolbar"] { visibility: hidden; }
+div[data-testid="stDecoration"] { visibility: hidden; }
+#MainMenu { visibility: hidden; }
+.stAppDeployButton { display: none; }
+.mx-topbar {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: wrap; row-gap: 6px; overflow: visible;
+  margin-top: 6px; padding: 4px 0 14px;
+}
+.mx-topbar > * { min-width: 0; }
+.mx-sub { overflow-wrap: anywhere; }
+.stTabs [data-baseweb="tab-list"] { overflow-x: auto; gap: 4px; }
+.stTabs [data-baseweb="tab"] { white-space: nowrap; }
+details summary { overflow-wrap: anywhere; }
+div[data-testid="stExpander"] details summary p {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+div[data-testid="stDataFrame"] { width: 100%; }
+section[data-testid="stSidebar"] { min-width: 0; }
+h1, h2, h3 { letter-spacing: -0.015em !important; }
+
+.mx-brand { font-weight: 800; font-size: 19px; letter-spacing: -0.01em; }
+.mx-sub { color: var(--mx-muted); font-size: 13.5px; }
+.mx-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.mx-dot.ok { background: #c8ff2e; box-shadow: 0 0 8px rgba(200,255,46,.7); }
+.mx-dot.down { background: #ff6b6b; }
+.mx-kpi { background: #141417; border: 1px solid var(--mx-border); border-radius: 10px; padding: 14px 16px; }
+.mx-kpi .v { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.mx-kpi .v em { color: var(--mx-accent); font-style: normal; }
+.mx-kpi .l { font-size: 12.5px; color: var(--mx-muted); margin-top: 2px; }
+.mx-badge { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .06em;
+  border-radius: 999px; padding: 3px 10px; border: 1px solid var(--mx-border); }
+.mx-badge.llm { color: #ffb86b; border-color: #4a3420; }
+.mx-badge.reflex { color: #c8ff2e; border-color: #3a4a1a; }
+.mx-row { border-bottom: 1px solid #1b1b21; padding: 10px 2px; }
+.mx-meta { color: var(--mx-muted); font-size: 12.5px; }
+.stTabs [data-baseweb="tab"] { font-size: 14.5px; }
+footer { visibility: hidden; }
+@media (max-width: 720px) {
+  .mx-kpi .v { font-size: 19px; }
+  .block-container { padding-left: 1rem; padding-right: 1rem; }
+}

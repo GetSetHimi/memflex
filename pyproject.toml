@@ -1,0 +1,50 @@
+[project]
+# Brand is Memflex (memflex.dev). Import package stays `reflex`
+# (from reflex import Client) to avoid breaking existing code; the thin
+# client files (reflex/client.py, reflex/plug.py) are Apache-2.0, everything
+# else is FSL-1.1-ALv2 — see LICENSE, LICENSE-CLIENT, NOTICE.
+name = "memflex"
+version = "0.3.0"
+description = "Memflex — reflexes & verified memory for AI agents. Repeats answered in ~50ms at ₹0, in any language."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "FSL-1.1-ALv2" }
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.29",
+  "pydantic>=2.6",
+  "pydantic-settings>=2.2",
+  "numpy>=1.26",
+  "sqlite-vec>=0.1.6",
+  "sentence-transformers>=2.7",
+  "httpx>=0.27",
+  "psycopg[binary]>=3.1",
+  "apscheduler>=3.10",
+  "streamlit>=1.33",
+  "requests>=2.31",
+  "opentelemetry-api>=1.24",
+  "opentelemetry-sdk>=1.24",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.4"]
+contrib = ["langchain-core>=0.1"]
+
+[project.scripts]
+memflex-server = "reflex.api.app:run"
+reflex-server = "reflex.api.app:run"  # backwards-compat alias
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["reflex*"]

@@ -23,7 +23,7 @@ import Base from "../layouts/Base.astro";
     </div>
     <div class="card rv" style="margin-top:18px;border-color:var(--accent)">
       <h3>Have a doubt? Ask us.</h3>
-      <p class="muted" style="margin-top:0">Confused by the table, or wondering if Memflex fits <b>your</b> stack? Write your question — it opens in your email, addressed to us.</p>
+      <p class="muted" style="margin-top:0">Confused by the table, or wondering if Memflex fits <b>your</b> stack? Write your question — it lands directly in our inbox.</p>
       <div class="askrow">
         <input id="qname" type="text" maxlength="80" placeholder="Your name (optional)" style="max-width:220px" />
       </div>
@@ -31,9 +31,10 @@ import Base from "../layouts/Base.astro";
         <textarea id="q" rows="3" maxlength="1000" placeholder="e.g. We run 2 lakh support chats/month on Intercom — will Memflex cut our bill?"></textarea>
       </div>
       <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" id="askbtn">Ask via email</button>
+        <button class="btn btn-primary" id="askbtn">Send question</button>
         <a class="btn" href="/#faq">Read FAQ first</a>
       </div>
+      <div id="qstatus" style="margin-top:10px;font-size:14px" aria-live="polite"></div>
       <p class="muted" style="font-size:13px;margin-top:10px">Prefer public? <a href="https://github.com/memflex">Open a GitHub discussion →</a></p>
     </div>
     <div class="grid2" style="margin-top:18px">
@@ -46,13 +47,36 @@ import Base from "../layouts/Base.astro";
   </div>
 </section>
 <script>
-document.getElementById('askbtn').addEventListener('click', () => {
-  const name = (document.getElementById('qname').value || '').trim();
-  const msg = (document.getElementById('q').value || '').trim();
-  if (!msg) { document.getElementById('q').focus(); return; }
-  const subject = encodeURIComponent('Memflex question' + (name ? ' from ' + name : '') + ' (compare page)');
-  const body = encodeURIComponent((name ? 'Hi, I am ' + name + '.\n\n' : 'Hi,\n\n') + msg + '\n\n— asked from memflex.dev/compare');
-  location.href = 'mailto:contact@memflex.dev?subject=' + subject + '&body=' + body;
+document.getElementById('askbtn').addEventListener('click', async () => {
+  const nameEl = document.getElementById('qname');
+  const msgEl = document.getElementById('q');
+  const status = document.getElementById('qstatus');
+  const btn = document.getElementById('askbtn');
+  const name = (nameEl.value || '').trim();
+  const msg = (msgEl.value || '').trim();
+  if (!msg) { msgEl.focus(); return; }
+  btn.disabled = true; btn.textContent = 'Sending…';
+  status.innerHTML = '';
+  try {
+    const r = await fetch('https://formsubmit.co/ajax/himi50071@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name: name || '(no name given)',
+        message: msg,
+        _subject: 'Memflex question' + (name ? ' from ' + name : '') + ' (compare page)',
+        _template: 'table',
+        _captcha: 'false',
+        _honey: ''
+      })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    status.innerHTML = '<span style="color:#c8ff2e">Sent — thank you! We usually reply within 2 days.</span>';
+    msgEl.value = '';
+  } catch (e) {
+    status.innerHTML = '<span class="muted">Could not send automatically. Please email <a href="mailto:himi50071@gmail.com">himi50071@gmail.com</a> directly.</span>';
+  }
+  btn.disabled = false; btn.textContent = 'Send question';
 });
 </script>
 </Base>

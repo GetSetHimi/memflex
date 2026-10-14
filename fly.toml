@@ -1,0 +1,35 @@
+# Fly.io — public demo API (no sleep, persistent volume).
+# User runs (needs flyctl + account):
+#   fly launch            # accept detected settings, skip postgres/redis
+#   fly volumes create memflex_data --region maa --size 1
+#   fly secrets set OPENROUTER_API_KEY=... GEMINI_API_KEY=...
+#   fly deploy            # → https://memflex-demo.fly.dev
+app = "memflex-demo"
+primary_region = "maa"  # Chennai (closest to India); fallback: sin
+
+[build]
+  dockerfile = "Dockerfile.api"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = false   # never sleep — the whole point vs free Render
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+[mounts]
+  source = "memflex_data"
+  destination = "/data"
+
+[env]
+  REFLEX_DB_PATH = "/data/reflex.db"
+  EMBEDDING_BACKEND = "hash"
+  DEMO_MODE = "true"
+  DEMO_MODELS = "mock/*,openrouter/nvidia/nemotron-3.5-lightning:free,gemini/gemini-flash-latest"
+  DEMO_RATE_PER_MIN = "30"
+  DEMO_MAX_CHARS = "300"
